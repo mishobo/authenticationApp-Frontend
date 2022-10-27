@@ -6,14 +6,13 @@ import { clearMessage } from './actions/message'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import EventBus from './common/EventBus'
 import { logout } from './actions/auth'
-import Home from './components/Home'
 import Login from './components/login'
 import Register from './components/register'
 import Profile from './components/profile'
 import BoardUser from './components/board-user'
 import BoardModerator from './components/board-moderator'
 import BoardAdmin from './components/board-admin'
-import './App.css'
+import './css/style.css'
 
 class App extends Component {
   constructor(props) {
@@ -65,89 +64,78 @@ class App extends Component {
     return (
       <Router history={history}>
         <div>
-          <nav className="navbar navbar-expand navbar-dark bg-dark">
-            <Link to={'/'} className="navbar-brand">
-              Mishobo
-            </Link>
-            <div className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link to={'/home'} className="nav-link">
-                  Home
+          {currentUser ? (
+            <nav className="navbar navbar-expand navbar-dark bg-dark">
+              {currentUser ? (
+                <Link to={'/'} className="navbar-brand">
+                  Mishobo
                 </Link>
-              </li>
-              {showModeratorBoard && (
-                <li className="nav-item">
-                  <Link to={'/mod'} className="nav-link">
-                    Moderator Board
-                  </Link>
-                </li>
+              ) : (
+                <Link to={'/'} className="navbar-brand"></Link>
               )}
 
-              {showModeratorBoard && (
-                <li className="nav-item">
-                  <Link to={'/mod'} className="nav-link">
-                    Moderator Board
-                  </Link>
-                </li>
-              )}
+              <div className="navbar-nav mr-auto">
+                {showModeratorBoard && (
+                  <li className="nav-item">
+                    <Link to={'/mod'} className="nav-link">
+                      Moderator Board
+                    </Link>
+                  </li>
+                )}
 
-              {showAdminBoard && (
-                <li className="nav-item">
-                  <Link to={'/admin'} className="nav-link">
-                    Admin Board
-                  </Link>
-                </li>
-              )}
+                {showModeratorBoard && (
+                  <li className="nav-item">
+                    <Link to={'/mod'} className="nav-link">
+                      Moderator Board
+                    </Link>
+                  </li>
+                )}
 
-              {currentUser && (
-                <li className="nav-item">
-                  <Link to={'/user'} className="nav-link">
-                    User
-                  </Link>
-                </li>
-              )}
-            </div>
-
-            {currentUser ? (
-              <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <Link to={'/profile'} className="nav-link">
-                    {currentUser.username}
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <a href="/login" className="nav-link" onClick={this.logOut}>
-                    LogOut
-                  </a>
-                </li>
+                {showAdminBoard && (
+                  <li className="nav-item">
+                    <Link to={'/admin'} className="nav-link">
+                      Admin Board
+                    </Link>
+                  </li>
+                )}
               </div>
-            ) : (
-              <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <Link to={'/login'} className="nav-link">
-                    Login
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to={'/register'} className="nav-link">
-                    Sign Up
-                  </Link>
-                </li>
-              </div>
-            )}
-          </nav>
 
-          <div className="container mt-3">
-            <Switch>
-              <Route exact path={['/', '/home']} component={Home} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/profile" component={Profile} />
-              <Route path="/user" component={BoardUser} />
-              <Route path="/mod" component={BoardModerator} />
-              <Route path="/admin" component={BoardAdmin} />
-            </Switch>
-          </div>
+              {currentUser ? (
+                <div className="navbar-nav ml-auto">
+                  <li className="nav-item">
+                    <Link to={'/profile'} className="nav-link">
+                      {currentUser.username}
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <a href="/login" className="nav-link" onClick={this.logOut}>
+                      LogOut
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={'/register'} className="nav-link">
+                      Sign Up
+                    </Link>
+                  </li>
+                </div>
+              ) : (
+                <div className="navbar-nav ml-auto"></div>
+              )}
+            </nav>
+          ) : (
+            ''
+          )}
+
+          <Switch>
+            {/* <Route exact path={['/home', '/home']} component={Home} /> */}
+            <Route exact path="/" component={Login} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/profile" component={Profile} />
+            <Route path="/user" component={BoardUser} />
+            <Route path="/mod" component={BoardModerator} />
+            <Route path="/admin" component={BoardAdmin} />
+          </Switch>
         </div>
       </Router>
     )
