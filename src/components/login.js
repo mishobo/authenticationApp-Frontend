@@ -1,157 +1,121 @@
-import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import React, { useState, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Navigate, useNavigate } from 'react-router-dom'
 import Form from 'react-validation/build/form'
 import Input from 'react-validation/build/input'
 import CheckButton from 'react-validation/build/button'
-import { connect } from 'react-redux'
 import { login } from '../actions/auth'
 
-class Login extends Component {
-  constructor(props) {
-    super(props)
-    this.handleLogin = this.handleLogin.bind(this)
-    this.onChangeUsername = this.onChangeUsername.bind(this)
-    this.onChangePassword = this.onChangePassword.bind(this)
+const Login = (props) => {
+  let navigate = useNavigate()
+  const form = useRef()
+  const checkBtn = useRef()
 
-    this.state = {
-      username: '',
-      password: '',
-      loading: false,
-    }
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const { isLoggedIn } = useSelector((state) => state.auth)
+  const { message } = useSelector((state) => state.message)
+
+  const dispatch = useDispatch()
+
+  const onChangeUsername = (e) => {
+    const username = e.target.value
+    setUsername(username)
   }
 
-  onChangeUsername(e) {
-    this.setState({
-      username: e.target.value,
-    })
+  const onChangePassword = (e) => {
+    const password = e.target.value
+    setPassword(password)
   }
 
-  onChangePassword(e) {
-    this.setState({
-      password: e.target.value,
-    })
-  }
-
-  handleLogin(e) {
+  const handleLogin = (e) => {
     e.preventDefault()
-    this.setState({
-      loading: true,
-    })
-
-    this.form.validateAll()
-
-    const { dispatch, history } = this.props
-
-    if (this.checkBtn.context._errors.length === 0) {
-      dispatch(login(this.state.username, this.state.password))
+    setLoading(true)
+    form.current.validateAll()
+    if (checkBtn.current.context._errors.length === 0) {
+      dispatch(login(username, password))
         .then(() => {
-          history.push('/profile')
+          navigate('/profile')
           window.location.reload()
         })
         .catch(() => {
-          this.setState({
-            loading: false,
-          })
+          setLoading(false)
         })
     } else {
-      this.setState({
-        loading: false,
-      })
+      setLoading(false)
     }
   }
 
-  render() {
-    const { isLoggedIn, message } = this.props
+  if (isLoggedIn) {
+    return <Navigate to="/profile" />
+  }
 
-    if (isLoggedIn) {
-      return <Redirect to="/profile" />
-    }
-
-    return (
-      <div className="login">
-        <div className="img js-fullheight">
-          <section className="ftco-section">
-            <div className="container">
-              <div className="row justify-content-center">
-                <div className="col-md-6 col-lg-4">
-                  <div className="login-wrap">
-                    <Form
-                      onSubmit={this.handleLogin}
-                      ref={(c) => {
-                        this.form = c
-                      }}
-                    >
-                      <div className="form-group">
-                        <Input
-                          type="text"
-                          className="form-control"
-                          placeholder="Username"
-                          name="username"
-                          value={this.state.username}
-                          onChange={this.onChangeUsername}
-                          required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <Input
-                          id="password-field"
-                          type="password"
-                          className="form-control"
-                          placeholder="Password"
-                          name="password"
-                          value={this.state.password}
-                          onChange={this.onChangePassword}
-                          required
-                        />
-                        <span
-                          toggle="#password-field"
-                          className="fa fa-fw fa-eye field-icon toggle-password"
-                        ></span>
-                      </div>
-                      <div className="form-group">
-                        <button
-                          type="submit"
-                          className="form-control btn btn-primary submit px-3"
-                          disabled={this.state.loading}
-                        >
-                          {this.state.loading && (
-                            <span className="spinner-border spinner-border-sm"></span>
-                          )}
-                          <span>Sign In</span>
-                        </button>
-                      </div>
-                      {message && (
-                        <div className="form-group">
-                          <div className="alert alert-danger" role="alert">
-                            {message}
-                          </div>
-                        </div>
-                      )}
-                      <CheckButton
-                        style={{ display: 'none' }}
-                        ref={(c) => {
-                          this.checkBtn = c
-                        }}
+  return (
+    <div className="login">
+      <div className="img js-fullheight">
+        <section className="ftco-section">
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6 col-lg-4">
+                <div className="login-wrap">
+                  <Form onSubmit={handleLogin} ref={form}>
+                    <div className="form-group">
+                      <Input
+                        type="text"
+                        className="form-control"
+                        placeholder="Username"
+                        name="username"
+                        value={username}
+                        onChange={onChangeUsername}
+                        required
                       />
-                    </Form>
-                  </div>
+                    </div>
+                    <div className="form-group">
+                      <Input
+                        id="password-field"
+                        type="password"
+                        className="form-control"
+                        placeholder="Password"
+                        name="password"
+                        value={password}
+                        onChange={onChangePassword}
+                        required
+                      />
+                      <span
+                        toggle="#password-field"
+                        className="fa fa-fw fa-eye field-icon toggle-password"
+                      ></span>
+                    </div>
+                    <div className="form-group">
+                      <button
+                        className="form-control btn btn-primary submit px-3"
+                        disabled={loading}
+                      >
+                        {loading && (
+                          <span className="spinner-border spinner-border-sm"></span>
+                        )}
+                        <span>Login</span>
+                      </button>
+                    </div>
+                    {message && (
+                      <div className="form-group">
+                        <div className="alert alert-danger" role="alert">
+                          {message}
+                        </div>
+                      </div>
+                    )}
+                    <CheckButton style={{ display: 'none' }} ref={checkBtn} />
+                  </Form>
                 </div>
               </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
-function mapStateToProps(state) {
-  const { isLoggedIn } = state.auth
-  const { message } = state.message
-  return {
-    isLoggedIn,
-    message,
-  }
-}
-
-export default connect(mapStateToProps)(Login)
+export default Login

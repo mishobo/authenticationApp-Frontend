@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { history } from '../helpers/history'
+import React, { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
 const parseJwt = (token) => {
   try {
@@ -9,26 +9,22 @@ const parseJwt = (token) => {
   }
 }
 
-class AuthVerify extends Component {
-  constructor(props) {
-    super(props)
+const AuthVerify = (props) => {
+  let location = useLocation()
 
-    history.listen(() => {
-      const user = JSON.parse(localStorage.getItem('user'))
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
 
-      if (user) {
-        const decodedJwt = parseJwt(user.accessToken)
+    if (user) {
+      const decodedJwt = parseJwt(user.accessToken)
 
-        if (decodedJwt.exp * 1000 < Date.now()) {
-          props.logOut()
-        }
+      if (decodedJwt.exp * 1000 < Date.now()) {
+        props.logOut()
       }
-    })
-  }
+    }
+  }, [location, props])
 
-  render() {
-    return <div></div>
-  }
+  return <div></div>
 }
 
 export default AuthVerify

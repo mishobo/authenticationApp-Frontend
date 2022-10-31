@@ -1,9 +1,11 @@
-import React, { Component } from 'react'
+import React, { useState, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import Form from 'react-validation/build/form'
 import Input from 'react-validation/build/input'
 import CheckButton from 'react-validation/build/button'
 import { isEmail } from 'validator'
-import { connect } from 'react-redux'
+
 import { register } from '../actions/auth'
 
 const required = (value) => {
@@ -16,7 +18,7 @@ const required = (value) => {
   }
 }
 
-const email = (value) => {
+const validEmail = (value) => {
   if (!isEmail(value)) {
     return (
       <div className="alert alert-danger" role="alert">
@@ -46,152 +48,111 @@ const vpassword = (value) => {
   }
 }
 
-class Register extends Component {
-  constructor(props) {
-    super(props)
-    this.handleRegister = this.handleRegister.bind(this)
-    this.onChangeUsername = this.onChangeUsername.bind(this)
-    this.onChangeEmail = this.onChangeEmail.bind(this)
-    this.onChangePassword = this.onChangePassword.bind(this)
+const Register = () => {
+  const form = useRef()
+  const checkBtn = useRef()
 
-    this.state = {
-      username: '',
-      email: '',
-      password: '',
-      successful: false,
-    }
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [successful, setSuccessful] = useState(false)
+
+  const { message } = useSelector((state) => state.message)
+  const dispatch = useDispatch()
+
+  const onChangeUsername = (e) => {
+    const username = e.target.value
+    setUsername(username)
   }
 
-  onChangeUsername(e) {
-    this.setState({
-      username: e.target.value,
-    })
+  const onChangeEmail = (e) => {
+    const email = e.target.value
+    setEmail(email)
   }
 
-  onChangeEmail(e) {
-    this.setState({
-      email: e.target.value,
-    })
+  const onChangePassword = (e) => {
+    const password = e.target.value
+    setPassword(password)
   }
 
-  onChangePassword(e) {
-    this.setState({
-      password: e.target.value,
-    })
-  }
-
-  handleRegister(e) {
+  const handleRegister = (e) => {
     e.preventDefault()
+    setSuccessful(false)
+    form.current.validateAll()
 
-    this.setState({
-      successful: false,
-    })
-
-    this.form.validateAll()
-
-    if (this.checkBtn.context._errors.length === 0) {
-      this.props
-        .dispatch(
-          register(this.state.username, this.state.email, this.state.password),
-        )
+    if (checkBtn.current.context._errors.length === 0) {
+      dispatch(register(username, email, password))
         .then(() => {
-          this.setState({
-            successful: true,
-          })
+          setSuccessful(true)
         })
         .catch(() => {
-          this.setState({
-            successful: false,
-          })
+          setSuccessful(false)
         })
     }
   }
 
-  render() {
-    const { message } = this.props
-
-    return (
-      <div className="container">
-        <div className="card card-container">
-          <Form
-            onSubmit={this.handleRegister}
-            ref={(c) => {
-              this.form = c
-            }}
-          >
-            {!this.state.successful && (
-              <div>
-                <div className="form-group">
-                  <label htmlFor="username">Username</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="username"
-                    value={this.state.username}
-                    onChange={this.onChangeUsername}
-                    validations={[required, vusername]}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.onChangeEmail}
-                    validations={[required, email]}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <Input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.onChangePassword}
-                    validations={[required, vpassword]}
-                  />
-                </div>
-                <div className="form-group">
-                  <button className="btn btn-primary btn-block">Sign Up</button>
-                </div>
-              </div>
-            )}
-
-            {message && (
+  return (
+    <div className="col-md-12">
+      <div className="card card-container">
+        <Form onSubmit={handleRegister} ref={form}>
+          {!successful && (
+            <div>
               <div className="form-group">
-                <div
-                  className={
-                    this.state.successful
-                      ? 'alert alert-success'
-                      : 'alert alert-danger'
-                  }
-                  role="alert"
-                >
-                  {message}
-                </div>
+                <label htmlFor="username">Username</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="username"
+                  value={username}
+                  onChange={onChangeUsername}
+                  validations={[required, vusername]}
+                />
               </div>
-            )}
-            <CheckButton
-              style={{ display: 'none' }}
-              ref={(c) => {
-                this.checkBtn = c
-              }}
-            />
-          </Form>
-        </div>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="email"
+                  value={email}
+                  onChange={onChangeEmail}
+                  validations={[required, validEmail]}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <Input
+                  type="password"
+                  className="form-control"
+                  name="password"
+                  value={password}
+                  onChange={onChangePassword}
+                  validations={[required, vpassword]}
+                />
+              </div>
+              <div className="form-group">
+                <button className="btn btn-primary btn-block">Sign Up</button>
+              </div>
+            </div>
+          )}
+
+          {message && (
+            <div className="form-group">
+              <div
+                className={
+                  successful ? 'alert alert-success' : 'alert alert-danger'
+                }
+                role="alert"
+              >
+                {message}
+              </div>
+            </div>
+          )}
+          <CheckButton style={{ display: 'none' }} ref={checkBtn} />
+        </Form>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
-function mapStateToProps(state) {
-  const { message } = state.message
-  return {
-    message,
-  }
-}
-
-export default connect(mapStateToProps)(Register)
+export default Register

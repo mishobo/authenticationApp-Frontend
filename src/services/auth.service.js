@@ -2,24 +2,36 @@ import axios from 'axios'
 
 const API_URL = 'http://localhost:8081/api/auth/'
 
-class AuthService {
-  login(username, password) {
-    return axios
-      .post(API_URL + 'signin', { username, password })
-      .then((Response) => {
-        if (Response.data.accessToken) {
-          localStorage.setItem('user', JSON.stringify(Response.data))
-        }
-        return Response.data
-      })
-  }
-  logout() {
-    localStorage.removeItem('user')
-  }
+// authentication service
 
-  register(username, email, password) {
-    return axios.post(API_URL + 'signup', { username, email, password })
-  }
+const register = (username, email, password) => {
+  return axios.post(API_URL + 'signup', {
+    username,
+    email,
+    password,
+  })
 }
 
-export default new AuthService()
+const login = (username, password) => {
+  return axios
+    .post(API_URL + 'signin', {
+      username,
+      password,
+    })
+    .then((response) => {
+      if (response.data.accessToken) {
+        localStorage.setItem('user', JSON.stringify(response.data))
+      }
+      return response.data
+    })
+}
+
+const logout = () => {
+  localStorage.removeItem('user')
+}
+
+export default {
+  register,
+  login,
+  logout,
+}
