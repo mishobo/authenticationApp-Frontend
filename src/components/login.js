@@ -83,10 +83,6 @@ const Login = (props) => {
                         onChange={onChangePassword}
                         required
                       />
-                      <span
-                        toggle="#password-field"
-                        className="fa fa-fw fa-eye field-icon toggle-password"
-                      ></span>
                     </div>
                     <div className="form-group">
                       <button
@@ -99,6 +95,7 @@ const Login = (props) => {
                         <span>Login</span>
                       </button>
                     </div>
+
                     {message && (
                       <div className="form-group">
                         <div className="alert alert-danger" role="alert">

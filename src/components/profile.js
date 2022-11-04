@@ -1,6 +1,7 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Avatar from '../css/images/avatar.jpeg'
 
 const Profile = () => {
   const { user: currentUser } = useSelector((state) => state.auth)
@@ -9,28 +10,47 @@ const Profile = () => {
     return <Navigate to="/login" />
   }
 
+  const mystyle = {
+    width: '400px',
+  }
+
   return (
-    <div className="container">
-      <header className="jumbotron">
-        <h3>
-          <strong>{currentUser.username}</strong> Profile
-        </h3>
+    <div className="container pt-5">
+      <header>
+        <h3>User Profile</h3>
       </header>
-      <p>
-        <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{' '}
-        {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
-      </p>
-      <p>
-        <strong>Id:</strong> {currentUser.id}
-      </p>
-      <p>
-        <strong>Email:</strong> {currentUser.email}
-      </p>
-      <strong>Authorities:</strong>
-      <ul>
-        {currentUser.roles &&
-          currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
-      </ul>
+      <div className="card" style={mystyle}>
+        <img className="card-img-top" src={Avatar} alt="" />
+        <div class="card-body">
+          <h4 class="card-title">Hussein Abdallah Mishobo</h4>
+          <p class="card-text">
+            <strong>Email:</strong> {currentUser.email}
+          </p>
+          <p class="card-text">
+            <strong>Username:</strong> {currentUser.username}
+          </p>
+          <p class="card-text">
+            <strong>Authorities:</strong>
+            <ul>
+              {currentUser.roles &&
+                currentUser.roles.map((role, index) => (
+                  <li key={index}>{role}</li>
+                ))}
+            </ul>
+          </p>
+          <p class="card-text">
+            <strong>Id:</strong> {currentUser.id}
+          </p>
+          <p class="card-text">
+            <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)}{' '}
+            ...{' '}
+            {currentUser.accessToken.substr(
+              currentUser.accessToken.length - 20,
+            )}
+          </p>
+        </div>
+      </div>
+      <div class="card-body"></div>
     </div>
   )
 }

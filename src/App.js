@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Routes, Route, Link, useLocation } from 'react-router-dom'
+import {
+  Routes,
+  Route,
+  Link,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from 'react-router-dom'
 import { clearMessage } from './actions/message'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { logout } from './actions/auth'
@@ -11,10 +18,16 @@ import BoardUser from './components/board-user'
 import BoardModerator from './components/board-moderator'
 import BoardAdmin from './components/board-admin'
 import './css/style.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+
+import Dropdown from './components/Dropdown'
 
 const App = () => {
+  let navigate = useNavigate()
   const [showModeratorBoard, setShowModeratorBoard] = useState(false)
   const [showAdminBoard, setShowAdminBoard] = useState(false)
+  const [open, setOpen] = React.useState(false)
 
   const { user: currentUser } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
@@ -41,70 +54,59 @@ const App = () => {
     }
   }, [currentUser])
 
+  const handleOpen = () => {
+    setOpen(!open)
+  }
+
+  const handleMenu1 = () => {
+    navigate('/profile')
+    setOpen(false)
+  }
+  const handleMenu2 = () => {
+    logOut()
+    // do something
+    setOpen(false)
+  }
+  const handleMenu3 = () => {
+    navigate('/register')
+    setOpen(false)
+  }
+
   return (
     <div>
       {currentUser ? (
         <nav className="navbar navbar-expand navbar-dark bg-dark">
-          {currentUser ? (
-            <Link to={'/'} className="navbar-brand">
-              Mishobo
-            </Link>
-          ) : (
-            <Link to={'/'} className="navbar-brand"></Link>
-          )}
+          <Link to={'/'} className="navbar-brand">
+            logo
+          </Link>
 
-          <div className="navbar-nav mr-auto">
-            {showModeratorBoard && (
-              <li className="nav-item">
-                <Link to={'/mod'} className="nav-link">
-                  Moderator Board
-                </Link>
-              </li>
-            )}
-
-            {showModeratorBoard && (
-              <li className="nav-item">
-                <Link to={'/mod'} className="nav-link">
-                  Moderator Board
-                </Link>
-              </li>
-            )}
-
-            {showAdminBoard && (
-              <li className="nav-item">
-                <Link to={'/admin'} className="nav-link">
-                  Admin Board
-                </Link>
-              </li>
-            )}
-          </div>
-
-          {currentUser ? (
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={'/profile'} className="nav-link">
-                  {currentUser.username}
-                </Link>
-              </li>
-              <li className="nav-item">
-                <a href="/login" className="nav-link" onClick={logOut}>
-                  LogOut
-                </a>
-              </li>
-              <li className="nav-item">
-                <Link to={'/register'} className="nav-link">
-                  Sign Up
-                </Link>
-              </li>
+          <div className="navbar-nav ml-auto">
+            <div>
+              <Dropdown
+                open={open}
+                trigger={
+                  <button onClick={handleOpen} className="btn btn-info">
+                    {currentUser.username}
+                    <span className="badge">
+                      <FontAwesomeIcon
+                        icon={solid('circle-user')}
+                        size={'1x'}
+                      />
+                    </span>
+                  </button>
+                }
+                menu={[
+                  <button onClick={handleMenu1}>My Profile</button>,
+                  <button onClick={handleMenu2}>Loout</button>,
+                  <button onClick={handleMenu3}>Sign up</button>,
+                ]}
+              />
             </div>
-          ) : (
-            <div className="navbar-nav ml-auto"></div>
-          )}
+          </div>
         </nav>
       ) : (
         ''
       )}
-      {/* <Route exact path={['/home', '/home']} component={Home} /> */}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
