@@ -5,6 +5,7 @@ import Form from 'react-validation/build/form'
 import Input from 'react-validation/build/input'
 import CheckButton from 'react-validation/build/button'
 import { login } from '../actions/auth'
+import Wallpaper from '../css/images/wallpaperflare.jpg'
 
 const Login = (props) => {
   let navigate = useNavigate()
@@ -52,8 +53,13 @@ const Login = (props) => {
     return <Navigate to="/profile" />
   }
 
+  const mystyle = {
+    backgroundImage: `url(${Wallpaper})`,
+    height: '100vh',
+  }
+
   return (
-    <div className="login">
+    <div style={mystyle}>
       <div className="img js-fullheight">
         <section className="ftco-section">
           <div className="container">

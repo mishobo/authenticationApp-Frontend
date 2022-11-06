@@ -20,8 +20,9 @@ import BoardAdmin from './components/board-admin'
 import './css/style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-
 import Dropdown from './components/Dropdown'
+import 'bootstrap/dist/js/bootstrap.bundle.min'
+import Avatar from './css/images/avatar.jpeg'
 
 const App = () => {
   let navigate = useNavigate()
@@ -72,35 +73,47 @@ const App = () => {
     setOpen(false)
   }
 
+  const userIcon = {
+    width: '15px',
+  }
+
   return (
     <div>
       {currentUser ? (
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <Link to={'/'} className="navbar-brand">
-            logo
-          </Link>
+        <nav className="navbar navbar-expand navbar-dark bg-dark fixed-top">
+          <div className="container-fluid">
+            <Link to={'/'} className="navbar-brand">
+              logo
+            </Link>
 
-          <div className="navbar-nav ml-auto">
-            <div>
-              <Dropdown
-                open={open}
-                trigger={
-                  <button onClick={handleOpen} className="btn btn-info">
-                    {currentUser.username}
-                    <span className="badge">
-                      <FontAwesomeIcon
-                        icon={solid('circle-user')}
-                        size={'1x'}
-                      />
-                    </span>
-                  </button>
-                }
-                menu={[
-                  <button onClick={handleMenu1}>My Profile</button>,
-                  <button onClick={handleMenu2}>Loout</button>,
-                  <button onClick={handleMenu3}>Sign up</button>,
-                ]}
-              />
+            <div className="navbar-nav ml-auto">
+              <div>
+                <Dropdown
+                  open={open}
+                  trigger={
+                    <button
+                      onClick={handleOpen}
+                      className="user-button 
+                     btn btn-primary"
+                    >
+                      {currentUser.username}
+                      <span className="badge">
+                        <img
+                          src={Avatar}
+                          alt="Logo"
+                          style={userIcon}
+                          className="rounded-pill"
+                        />
+                      </span>
+                    </button>
+                  }
+                  menu={[
+                    <button onClick={handleMenu1}>My Profile</button>,
+                    <button onClick={handleMenu2}>Loout</button>,
+                    <button onClick={handleMenu3}>Sign up</button>,
+                  ]}
+                />
+              </div>
             </div>
           </div>
         </nav>

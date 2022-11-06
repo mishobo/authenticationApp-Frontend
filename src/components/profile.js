@@ -16,20 +16,27 @@ const Profile = () => {
 
   return (
     <div className="container pt-5">
-      <header>
-        <h3>User Profile</h3>
-      </header>
       <div className="card" style={mystyle}>
         <img className="card-img-top" src={Avatar} alt="" />
-        <div class="card-body">
-          <h4 class="card-title">Hussein Abdallah Mishobo</h4>
-          <p class="card-text">
+        <div className="card-body">
+          <h4 className="card-title">Hussein Abdallah Mishobo</h4>
+          <p className="card-text">
             <strong>Email:</strong> {currentUser.email}
           </p>
-          <p class="card-text">
+          <p className="card-text">
             <strong>Username:</strong> {currentUser.username}
           </p>
-          <p class="card-text">
+          <p className="card-text">
+            <strong>Id:</strong> {currentUser.id}
+          </p>
+          <p className="card-text">
+            <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)}{' '}
+            ...{' '}
+            {currentUser.accessToken.substr(
+              currentUser.accessToken.length - 20,
+            )}
+          </p>
+          <p className="card-text">
             <strong>Authorities:</strong>
             <ul>
               {currentUser.roles &&
@@ -38,19 +45,9 @@ const Profile = () => {
                 ))}
             </ul>
           </p>
-          <p class="card-text">
-            <strong>Id:</strong> {currentUser.id}
-          </p>
-          <p class="card-text">
-            <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)}{' '}
-            ...{' '}
-            {currentUser.accessToken.substr(
-              currentUser.accessToken.length - 20,
-            )}
-          </p>
         </div>
       </div>
-      <div class="card-body"></div>
+      <div className="card-body"></div>
     </div>
   )
 }
