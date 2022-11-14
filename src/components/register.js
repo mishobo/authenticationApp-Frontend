@@ -1,52 +1,9 @@
 import React, { useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
 import Form from 'react-validation/build/form'
 import Input from 'react-validation/build/input'
 import CheckButton from 'react-validation/build/button'
-import { isEmail } from 'validator'
-
 import { register } from '../actions/auth'
-
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    )
-  }
-}
-
-const validEmail = (value) => {
-  if (!isEmail(value)) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This is not a valid email.
-      </div>
-    )
-  }
-}
-
-const vusername = (value) => {
-  if (value.length < 3 || value.length > 20) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 20 characters.
-      </div>
-    )
-  }
-}
-
-const vpassword = (value) => {
-  if (value.length < 6 || value.length > 40) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The password must be between 6 and 40 characters.
-      </div>
-    )
-  }
-}
 
 const Register = () => {
   const form = useRef()
@@ -91,66 +48,75 @@ const Register = () => {
     }
   }
 
+  const mystyle = {
+    borderStyle: 'solid',
+  }
+
   return (
     <div className="container pt-5">
-      <div className="col-md-12">
-        <div className="card card-container">
-          <Form onSubmit={handleRegister} ref={form}>
-            {!successful && (
-              <div>
-                <div className="form-group">
-                  <label htmlFor="username">Username</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="username"
-                    value={username}
-                    onChange={onChangeUsername}
-                    validations={[required, vusername]}
-                  />
+      <div className="card card-container">
+        <div className="row justify-content-center">
+          <div className="col-md-6 col-lg-4">
+            <Form onSubmit={handleRegister} ref={form}>
+              {!successful && (
+                <div>
+                  <div className="form-floating mb-3 mt-3">
+                    <input
+                      type="text"
+                      className="form-control sign-up"
+                      style={mystyle}
+                      id="username"
+                      placeholder="Enter username"
+                      name="username"
+                    />
+                    <label for="username">username</label>
+                  </div>
+                  <div className="form-floating mb-3 mt-3">
+                    <input
+                      type="text"
+                      className="form-control sign-up"
+                      id="email"
+                      placeholder="Enter email"
+                      name="email"
+                    />
+                    <label for="email">Email</label>
+                  </div>
+                  <div className="form-floating mb-3 mt-3">
+                    <input
+                      id="password"
+                      type="password"
+                      className="form-control sign-up"
+                      name="password"
+                      value={password}
+                      placeholder="Enter password"
+                      onChange={onChangePassword}
+                      required
+                    />
+                    <label for="password">password</label>
+                  </div>
+                  <div className="form-group">
+                    <button className="btn btn-primary btn-block">
+                      Sign Up
+                    </button>
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="email"
-                    value={email}
-                    onChange={onChangeEmail}
-                    validations={[required, validEmail]}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <Input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={password}
-                    onChange={onChangePassword}
-                    validations={[required, vpassword]}
-                  />
-                </div>
-                <div className="form-group">
-                  <button className="btn btn-primary btn-block">Sign Up</button>
-                </div>
-              </div>
-            )}
+              )}
 
-            {message && (
-              <div className="form-group">
-                <div
-                  className={
-                    successful ? 'alert alert-success' : 'alert alert-danger'
-                  }
-                  role="alert"
-                >
-                  {message}
+              {message && (
+                <div className="form-group">
+                  <div
+                    className={
+                      successful ? 'alert alert-success' : 'alert alert-danger'
+                    }
+                    role="alert"
+                  >
+                    {message}
+                  </div>
                 </div>
-              </div>
-            )}
-            <CheckButton style={{ display: 'none' }} ref={checkBtn} />
-          </Form>
+              )}
+              <CheckButton style={{ display: 'none' }} ref={checkBtn} />
+            </Form>
+          </div>
         </div>
       </div>
     </div>

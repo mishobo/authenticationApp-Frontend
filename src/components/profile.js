@@ -36,7 +36,7 @@ const Profile = () => {
               currentUser.accessToken.length - 20,
             )}
           </p>
-          <p className="card-text">
+          <div className="card-text">
             <strong>Authorities:</strong>
             <ul>
               {currentUser.roles &&
@@ -44,7 +44,7 @@ const Profile = () => {
                   <li key={index}>{role}</li>
                 ))}
             </ul>
-          </p>
+          </div>
         </div>
       </div>
       <div className="card-body"></div>

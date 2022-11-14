@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  Routes,
-  Route,
-  Link,
-  useLocation,
-  Navigate,
-  useNavigate,
-} from 'react-router-dom'
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
 import { clearMessage } from './actions/message'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { logout } from './actions/auth'
@@ -18,8 +11,6 @@ import BoardUser from './components/board-user'
 import BoardModerator from './components/board-moderator'
 import BoardAdmin from './components/board-admin'
 import './css/style.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Dropdown from './components/Dropdown'
 import 'bootstrap/dist/js/bootstrap.bundle.min'
 import Avatar from './css/images/avatar.jpeg'
@@ -65,8 +56,8 @@ const App = () => {
   }
   const handleMenu2 = () => {
     logOut()
-    // do something
     setOpen(false)
+    navigate('/login')
   }
   const handleMenu3 = () => {
     navigate('/register')
@@ -109,7 +100,7 @@ const App = () => {
                   }
                   menu={[
                     <button onClick={handleMenu1}>My Profile</button>,
-                    <button onClick={handleMenu2}>Loout</button>,
+                    <button onClick={handleMenu2}>Logout</button>,
                     <button onClick={handleMenu3}>Sign up</button>,
                   ]}
                 />
